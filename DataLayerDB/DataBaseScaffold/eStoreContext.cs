@@ -17,6 +17,7 @@ namespace DataLayerDB.DataBaseScaffold
         }
 
         public virtual DbSet<Member> Members { get; set; } = null!;
+        public virtual DbSet<Order> Orders { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -54,6 +55,23 @@ namespace DataLayerDB.DataBaseScaffold
                 entity.Property(e => e.Password)
                     .HasMaxLength(30)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Freight).HasColumnType("money");
+
+                entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+                entity.Property(e => e.OrderDate).HasColumnType("datetime");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.RequireDate).HasColumnType("datetime");
+
+                entity.Property(e => e.ShippedDate).HasColumnType("datetime");
             });
 
             OnModelCreatingPartial(modelBuilder);
