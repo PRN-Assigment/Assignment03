@@ -22,5 +22,12 @@ namespace DataLayer.Implement
             var result = _dbContext.Members;
             return result;
         }
+
+        public Member Login(string username, string password)
+        {
+            var user = _dbSet.FirstOrDefault(x => x.Email.Equals(username) && x.Password.Equals(password));
+
+            return user;
+        }
     }
 }

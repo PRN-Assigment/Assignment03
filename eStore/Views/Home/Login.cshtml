@@ -1,5 +1,42 @@
 ﻿@model MemberViewModel;
 
-<div>
-	<a href="@Url.Action("GetAll","Home")">GetALL</a>
+<div class="login-container">
+	<div id="login-title">
+		<h2>Login</h2>
+	</div>
+	<div id="login-input" class="row">
+			<label class="col-12 col-md-4 login-padding">Member Email: </label>
+			<input class="col-12 col-md-7 login-padding" id="txtUsername" type="text" name="txtUsername" value="" placeholder="Input member email" />
+			<br />
+			<label class="col-12 col-md-4 login-padding">Password: </label>
+			<input class="col-12 col-md-7 login-padding" id="txtPassword" type="password" name="txtPassword" value="" placeholder="Input password" />
+	</div>
+	<div id="login-button" class="login-padding">
+		<button id="btnLogin" onclick="Login()">Login</button>
+	</div>
 </div>
+
+<script>
+function Login() {
+    $.ajax({
+		type: "POST",
+        data: {
+			Username:$('#txtUsername').val(),
+			Password:$('#txtPassword').val()
+		},
+		url: '/Home/LoginUser',
+        success: function(data) {
+            if (data.status) {
+                alert('Login Successfully');
+                console.log(data.member);
+            } else {
+                alert('Error: ' + data.errorMessage);
+			}
+		},
+        error: function(data) {
+            alert('Unknown Error!');
+            console.log(data);
+		}
+	})
+}	
+</script>

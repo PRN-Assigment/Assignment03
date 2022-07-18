@@ -1,4 +1,5 @@
-﻿using DataLayer.Interface;
+﻿using AutoMapper;
+using DataLayer.Interface;
 using eStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,10 +10,12 @@ namespace eStore.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IMemberRepository _memberRepository;
-        public HomeController(ILogger<HomeController> logger, IMemberRepository memberRepository)
+        private readonly IMapper _mapper;
+        public HomeController(ILogger<HomeController> logger, IMapper mapper, IMemberRepository memberRepository)
         {
             _logger = logger;
             _memberRepository = memberRepository;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -38,6 +41,42 @@ namespace eStore.Controllers
             Console.WriteLine(list);
 
             return new JsonResult(list);
+        }
+
+        public IActionResult Login()
+        {
+            return View("Login");
+        }
+
+        public JsonResult LoginUser(string Username, string Password)
+        {
+            string errorMessage = "";
+            bool status = false;
+            MemberViewModel member = null;
+            try
+            {
+                member = _mapper.Map<MemberViewModel>(_memberRepository.Login(Username, Password));
+                if(member == null)
+                {
+                    status = false;
+                    errorMessage = "Invalid Username or Password";
+                }
+                else
+                {
+                    status = true;
+                }
+            } catch(Exception ex)
+            {
+                errorMessage = ex.Message;
+                status = false;
+            }
+
+            return new JsonResult(new
+            {
+                status = status,
+                errorMessage = errorMessage,
+                member = member
+            });
         }
     }
 }

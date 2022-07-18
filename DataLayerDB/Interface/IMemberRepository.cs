@@ -10,5 +10,6 @@ namespace DataLayer.Interface
     public interface IMemberRepository
     {
         IQueryable<Member> GetMembers();
+        Member Login(string username, string password);
     }
 }
