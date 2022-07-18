@@ -18,12 +18,13 @@ namespace DataLayerDB.DataBaseScaffold
 
         public virtual DbSet<Member> Members { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
+        public virtual DbSet<Product> Products { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=eStore ;User Id=Khalid;password=Colorful.1601;Trusted_Connection=False;MultipleActiveResultSets=true;");
             }
         }
@@ -72,6 +73,40 @@ namespace DataLayerDB.DataBaseScaffold
                 entity.Property(e => e.RequireDate).HasColumnType("datetime");
 
                 entity.Property(e => e.ShippedDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<OrderDetail>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("OrderDetail");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.UnitPrice).HasColumnType("money");
+            });
+
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Product");
+
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.ProductName)
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UnitPrice).HasColumnType("money");
+
+                entity.Property(e => e.Weight)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);
