@@ -1,0 +1,33 @@
+﻿.align-center-memberList {
+    text-align: center;
+}
+
+.titles-memberList {
+    text-align: center;
+    border: 0;
+    outline: 0;
+}
+
+#filterable-memberList {
+    -webkit-box-shadow: 0 0 5px 2px lightgrey;
+    -moz-box-shadow: 0 0 5px 2px lightgrey;
+    box-shadow: 0 0 5px 2px lightgrey;
+    padding-top: 15px;
+}
+
+#card-header-memberList {
+    height: 50px;
+}
+
+#table-memberList{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.memberlist-container {
+    text-align: center;
+    height: 60%;
+    width: 100%;
+    margin-top: 5%;
+    background-color: #e7fef8;
+}
