@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DataLayerDB.DataBaseScaffold
+﻿namespace eStore.Models
 {
-    public partial class Product
+    public class ProductViewModel
     {
         public int ProductId { get; set; }
         public int CategoryId { get; set; }

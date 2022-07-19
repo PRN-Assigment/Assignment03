@@ -3,6 +3,8 @@
 using DataLayer.Implement;
 using DataLayer.Interface;
 using DataLayerDB.DataBaseScaffold;
+using DataLayerDB.Implement;
+using DataLayerDB.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddDbContext<eStoreContext>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddSession();
 
