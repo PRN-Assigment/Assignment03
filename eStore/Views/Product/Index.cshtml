@@ -1,0 +1,63 @@
+﻿@model IEnumerable<DataLayerDB.DataBaseScaffold.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <strong class="text-uppercase text-black-50">Danh sach san pham</strong>
+            </div>
+            <div class="cod-md-6 text-end">
+                <a href="@Url.Action("Create","Product")" class="btn btn-sm btn-success">Create</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-3">
+        <table class="table table-bordered table-hover">
+            <thead class=" table-success">
+                <tr>
+                    <th style="width:20px;" class="text-center"> Category ID</th>
+                    <th style="width:20px;" class="text-center"> Product Name</th>
+                    <th style="width:20px;" class="text-center">Weight</th>
+                    <th style="width:20px;" class="text-center">Unit Price</th>
+                    <th style="width:20px;" class="text-center">Unit in Stock</th>
+                    <th style="width:20px;" class="text-center">Tools</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">@item.CategoryId</td>
+                        <td class="text-center">@item.ProductName</td>
+                        <td class="text-center">@item.Weight</td>
+                        <td class="text-center">@item.UnitPrice</td>
+                        <td class="text-center">@item.UnitInStock</td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                        </td>
+                    </tr>
+                }
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+

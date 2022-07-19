@@ -82,21 +82,21 @@ namespace DataLayerDB.DataBaseScaffold
 
             modelBuilder.Entity<Product>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("Product");
-
-                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
                 entity.Property(e => e.ProductName)
+                    .IsRequired()
                     .HasMaxLength(40)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UnitPrice).HasColumnType("money");
 
                 entity.Property(e => e.Weight)
+                    .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
             });
