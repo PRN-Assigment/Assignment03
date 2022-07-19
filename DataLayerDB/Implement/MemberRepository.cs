@@ -89,6 +89,8 @@ namespace DataLayer.Implement
 
         public Member Login(string username, string password)
         {
+            InitAdmin();
+
             var user = _dbSet.FirstOrDefault(x => x.Email.Equals(username) && x.Password.Equals(password));
 
             return user;
