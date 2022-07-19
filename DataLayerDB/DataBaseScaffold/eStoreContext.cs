@@ -25,7 +25,7 @@ namespace DataLayerDB.DataBaseScaffold
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=eStore ;User Id=Khalid;password=Colorful.1601;Trusted_Connection=False;MultipleActiveResultSets=true;");
+                optionsBuilder.UseSqlServer("Server=(local);uid=sa;pwd=1801;database=eStore;TrustServerCertificate=True");
             }
         }
 
@@ -90,21 +90,21 @@ namespace DataLayerDB.DataBaseScaffold
 
             modelBuilder.Entity<Product>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("Product");
-
-                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
                 entity.Property(e => e.ProductName)
+                    .IsRequired()
                     .HasMaxLength(40)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UnitPrice).HasColumnType("money");
 
                 entity.Property(e => e.Weight)
+                    .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
             });
