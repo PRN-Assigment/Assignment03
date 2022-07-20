@@ -52,7 +52,10 @@ namespace DataLayerDB.DataBaseScaffold
 
             modelBuilder.Entity<Order>(entity =>
             {
-                entity.HasNoKey();
+                
+
+                entity.HasKey(e => e.OrderId)
+                    .HasName("PK_Orders");
 
                 entity.Property(e => e.Freight).HasColumnType("money");
 
