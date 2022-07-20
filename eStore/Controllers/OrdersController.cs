@@ -7,14 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataLayerDB.DataBaseScaffold;
 
-using DataLayerDB.Implement;
-using DataLayerDB.Interface;
-
 namespace eStore.Controllers
 {
     public class OrdersController : Controller
     {
         private readonly eStoreContext _context;
+
         public OrdersController(eStoreContext context)
         {
             _context = context;
@@ -23,8 +21,9 @@ namespace eStore.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var eStoreContext = _context.Orders.Include(o => o.Member);
-            return View(await eStoreContext.ToListAsync());
+              return _context.Orders != null ? 
+                          View(await _context.Orders.ToListAsync()) :
+                          Problem("Entity set 'eStoreContext.Orders'  is null.");
         }
 
         // GET: Orders/Details/5
@@ -32,23 +31,22 @@ namespace eStore.Controllers
         {
             if (id == null || _context.Orders == null)
             {
-               return NotFound();
-           }
+                return NotFound();
+            }
 
             var order = await _context.Orders
-               .Include(o => o.Member)
-              .FirstOrDefaultAsync(m => m.OrderId == id);
+                .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
                 return NotFound();
             }
+
             return View(order);
         }
 
         // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "CompanyName");
             return View();
         }
 
@@ -59,13 +57,12 @@ namespace eStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderId,MemberId,OrderDate,RequireDate,ShippedDate,Freight")] Order order)
         {
-            if (ModelState.IsValid )
+            if (ModelState.IsValid)
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "CompanyName", order.MemberId);
             return View(order);
         }
 
@@ -82,7 +79,6 @@ namespace eStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "City", order.MemberId);
             return View(order);
         }
 
@@ -118,7 +114,6 @@ namespace eStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "City", order.MemberId);
             return View(order);
         }
 
@@ -131,7 +126,6 @@ namespace eStore.Controllers
             }
 
             var order = await _context.Orders
-                .Include(o => o.Member)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {

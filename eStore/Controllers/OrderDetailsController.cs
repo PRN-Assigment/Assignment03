@@ -21,8 +21,9 @@ namespace eStore.Controllers
         // GET: OrderDetails
         public async Task<IActionResult> Index()
         {
-            var eStoreContext = _context.OrderDetails.Include(o => o.Order).Include(o => o.Product);
-            return View(await eStoreContext.ToListAsync());
+              return _context.OrderDetails != null ? 
+                          View(await _context.OrderDetails.ToListAsync()) :
+                          Problem("Entity set 'eStoreContext.OrderDetails'  is null.");
         }
 
         // GET: OrderDetails/Details/5
@@ -34,8 +35,6 @@ namespace eStore.Controllers
             }
 
             var orderDetail = await _context.OrderDetails
-                .Include(o => o.Order)
-                .Include(o => o.Product)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (orderDetail == null)
             {
@@ -48,8 +47,6 @@ namespace eStore.Controllers
         // GET: OrderDetails/Create
         public IActionResult Create()
         {
-            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId");
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName");
             return View();
         }
 
@@ -66,8 +63,6 @@ namespace eStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", orderDetail.OrderId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName", orderDetail.ProductId);
             return View(orderDetail);
         }
 
@@ -84,8 +79,6 @@ namespace eStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", orderDetail.OrderId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName", orderDetail.ProductId);
             return View(orderDetail);
         }
 
@@ -121,8 +114,6 @@ namespace eStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", orderDetail.OrderId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName", orderDetail.ProductId);
             return View(orderDetail);
         }
 
@@ -135,8 +126,6 @@ namespace eStore.Controllers
             }
 
             var orderDetail = await _context.OrderDetails
-                .Include(o => o.Order)
-                .Include(o => o.Product)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (orderDetail == null)
             {
