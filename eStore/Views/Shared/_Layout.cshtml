@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/eStore.styles.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="~/css/Login.css" />
+    <link rel="stylesheet" href="~/css/MemberList.css" />
 
 </head>
 <body>
@@ -34,6 +35,9 @@
         </nav>
     </header>
     <div class="container">
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -44,9 +48,6 @@
             &copy; 2022 - eStore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

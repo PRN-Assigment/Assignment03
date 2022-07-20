@@ -45,6 +45,7 @@ namespace eStore.Controllers
 
         public IActionResult Login()
         {
+            
             return View("Login");
         }
 
@@ -71,11 +72,25 @@ namespace eStore.Controllers
                 status = false;
             }
 
+            if (status)
+            {
+                var admin = _memberRepository.GetInitAdmin();
+                if (Username.Equals(admin.Email))
+                {
+                    HttpContext.Session.SetString("Role", "Admin");
+                }
+                else
+                {
+                    HttpContext.Session.SetString("Role", "Member");
+                }
+            }
+
             return new JsonResult(new
             {
                 status = status,
                 errorMessage = errorMessage,
-                member = member
+                member = member,
+                role = HttpContext.Session.GetString("Role")
             });
         }
     }

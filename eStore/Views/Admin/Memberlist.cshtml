@@ -1,0 +1,124 @@
+﻿
+<div class="memberlist-container">
+	
+	<h2>Member List</h2>
+    <div class="row">
+        <div id="table-memberList" class="table-light table-bordered col-12 col-md-4">
+        </div>
+        <div id="Member-Infor" class="col-12 col-md-8">
+            <div class="row" style="text-align:left">
+                <h4>Member Information</h4>
+                <input class="col-12 col-md-9" type="text" id="txtMemberID" value="" readonly hidden/>
+                <label class="col-12 col-md-3">Member Email: </label>
+                <input class="col-12 col-md-9" type="text" id="txtEmail" value="" placeholder="Member Email" readonly/>
+                <br />
+                <label class="col-12 col-md-3">Company Name: </label>
+                <input class="col-12 col-md-9" type="text" id="txtCompanyName" value="" placeholder="Company Name"/>
+                <br />
+                <label class="col-12 col-md-3">City: </label>
+                <input class="col-12 col-md-9" type="text" id="txtCity" value="" placeholder="City"/>
+                <br />
+                <label class="col-12 col-md-3">Country: </label>
+                <input class="col-12 col-md-9" type="text" id="txtCountry" value="" placeholder="Country"/>
+                <br />
+            </div>
+                <button id="btnSave" class="col-md-2" style="background-color:aquamarine" onclick="SaveChanges()">Save Changes</button>
+                <button id="btnAdd" class="col-md-2" style="background-color:chartreuse">Add New</button>
+                <button id="btnDelete" class="col-md-2" style="background-color:red">Delete</button>
+                <button id="btnClose" class="col-md-2" style="background-color:orangered">Close</button>
+
+        </div>
+
+    </div>
+	
+</div>
+
+<script>
+var members = [];
+$(document).ready(function() {   
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/GetMemberList',
+        success: function(data) {
+            $.each(data, function(i, v) {
+                members.push({
+                    memberID: v.memberId,
+                    email: v.email,
+                    companyName: v.companyName,
+                    city: v.city,
+                    country: v.country
+                });
+            });
+            AppendTable(members);
+            EnableOnClick();
+        },
+        error: function() {
+            alert('Failed');
+        }
+    });
+
+    function AppendTable(data) {
+        var $members = $('<table/>');
+        $members.append($('<thead/>').append($('<th/>').html('Member Email'),
+                                             $('<th/>').html('Company Name'),
+                                             $('<th/>').html('City'),
+                                             $('<th/>').html('Country')));
+        $.each(data, function(i, v) {
+            $members.append($('<tr/>').append($('<td/>').html(v.email) 
+                                            , $('<td/>').html(v.companyName) 
+                                            , $('<td/>').html(v.city)
+                                            , $('<td/>').html(v.country)))
+        });
+        $('#table-memberList').empty().html($members);
+    }
+
+    function EnableOnClick() {
+        var target = $(document.getElementsByTagName('tr'));
+        var count = 0;
+        $.each(target, function(i, v) {
+            v.setAttribute('onClick', 'MemberDetail('+ members[count].memberID + ')');
+            count++;
+        });;
+    }
+});
+
+function MemberDetail(data) {
+        var result;
+        $.each(members, function(i, v) {
+            if (v.memberID == data) {
+                result = v;
+            }
+        });
+        $('#txtMemberID').val(result.memberID);
+        $('#txtEmail').val(result.email);
+        $('#txtCompanyName').val(result.companyName);
+        $('#txtCity').val(result.city);
+        $('#txtCountry').val(result.country);
+}
+
+function SaveChanges() {
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/SaveChanges',
+        data: {
+            MemberID: $('#txtMemberID').val(),
+            Email: $('#txtEmail').val(),
+            CompanyName: $('#txtCompanyName').val(),
+            City: $('#txtCity').val(),
+            Country: $('#txtCountry').val()
+        },
+        success: function(data) {
+            if (data.status) {
+                alert('Update Successfully');
+                window.location.href = '/Admin/ViewMemberList';
+            }else{
+                alert('Update Failed: ' + data.errorMessage);
+            }
+        },
+        error: function() {
+            alert('Unknown Error');
+        }
+    })
+}
+
+</script>

@@ -1,5 +1,4 @@
-﻿@model MemberViewModel;
-
+﻿
 <div class="login-container">
 	<div id="login-title">
 		<h2>Login</h2>
@@ -27,8 +26,11 @@ function Login() {
 		url: '/Home/LoginUser',
         success: function(data) {
             if (data.status) {
-                alert('Login Successfully');
-                console.log(data.member);
+                if (data.role == "Admin") {
+                    window.location.href = "/Admin/ViewMemberList";
+                } else {
+					window.location.href = "/Admin/MemberUserProfile";
+				}
             } else {
                 alert('Error: ' + data.errorMessage);
 			}
