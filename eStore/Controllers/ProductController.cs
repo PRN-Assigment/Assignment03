@@ -23,17 +23,46 @@ namespace eStore.Controllers
             _memberRepository = memberRepository;
             _mapper = mapper;
         }
-
-
-
-
-
         // GET: Product
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string txtProductName, int txtPrice)
         {
-              return _context.Products != null ? 
-                          View(await _context.Products.ToListAsync()) :
-                          Problem("Entity set 'eStoreContext.Products'  is null.");
+            var product = _context.Products.ToList();
+            if (!String.IsNullOrEmpty(txtProductName))
+            {
+                product = _context.Products.Where(m => m.ProductName.Contains(txtProductName)).ToList();
+            }
+            if (txtPrice != 0)
+            {
+                product = _context.Products.Where(m => m.UnitPrice == txtPrice).ToList();
+            }
+            if (txtPrice != 0 && !String.IsNullOrEmpty(txtProductName))
+            {
+                product = _context.Products.Where(m => m.UnitPrice == txtPrice && m.ProductName.Contains(txtProductName)).ToList();
+            }
+            return View(product);
+
+
+            //return _context.Products != null ? 
+                          //View(await _context.Products.ToListAsync()) :
+                          //Problem("Entity set 'eStoreContext.Products'  is null.");
+        }
+
+        public async Task<IActionResult> Search(string txtProductName, int txtPrice)
+        {
+            var product = _context.Products.ToList();
+            if (!String.IsNullOrEmpty(txtProductName))
+            {
+                product = _context.Products.Where(m=>m.ProductName.Contains(txtProductName)).ToList();
+            }
+            if(txtPrice != 0)
+            {
+                product = _context.Products.Where(m=>m.UnitPrice==txtPrice).ToList();
+            }
+            if(txtPrice !=0 && !String.IsNullOrEmpty(txtProductName))
+            {
+                product = _context.Products.Where(m => m.UnitPrice == txtPrice && m.ProductName.Contains(txtProductName)).ToList();
+            }
+            return View(product);
         }
 
         // GET: Product/Details/5
