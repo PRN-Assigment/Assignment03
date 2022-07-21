@@ -7,97 +7,89 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataLayerDB.DataBaseScaffold;
 
-using DataLayerDB.Interface;
-using DataLayerDB.Implement;
-
-
 namespace eStore.Controllers
 {
-    public class OrdersController : Controller
+    public class OrderDetailsController : Controller
     {
         private readonly eStoreContext _context;
 
-        private readonly IOrderRepository _orderRepository;
-
-        public OrdersController(eStoreContext context)
+        public OrderDetailsController(eStoreContext context)
         {
             _context = context;
-
-            _orderRepository = new OrderRepository(context);
         }
 
-        // GET: Orders
+        // GET: OrderDetails
         public async Task<IActionResult> Index()
         {
-              return _context.Orders != null ? 
-                          View(await _context.Orders.ToListAsync()) :
-                          Problem("Entity set 'eStoreContext.Orders'  is null.");
+              return _context.OrderDetails != null ? 
+                          View(await _context.OrderDetails.ToListAsync()) :
+                          Problem("Entity set 'eStoreContext.OrderDetails'  is null.");
         }
 
-        // GET: Orders/Details/5
+        // GET: OrderDetails/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Orders == null)
+            if (id == null || _context.OrderDetails == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders
+            var orderDetail = await _context.OrderDetails
                 .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
+            if (orderDetail == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            return View(orderDetail);
         }
 
-        // GET: Orders/Create
+        // GET: OrderDetails/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Orders/Create
+        // POST: OrderDetails/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,MemberId,OrderDate,RequireDate,ShippedDate,Freight")] Order order)
+        public async Task<IActionResult> Create([Bind("OrderId,ProductId,UnitPrice,Quantity,Discount")] OrderDetail orderDetail)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(order);
+                _context.Add(orderDetail);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            return View(orderDetail);
         }
 
-        // GET: Orders/Edit/5
+        // GET: OrderDetails/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Orders == null)
+            if (id == null || _context.OrderDetails == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            var orderDetail = await _context.OrderDetails.FindAsync(id);
+            if (orderDetail == null)
             {
                 return NotFound();
             }
-            return View(order);
+            return View(orderDetail);
         }
 
-        // POST: Orders/Edit/5
+        // POST: OrderDetails/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,MemberId,OrderDate,RequireDate,ShippedDate,Freight")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,UnitPrice,Quantity,Discount")] OrderDetail orderDetail)
         {
-            if (id != order.OrderId)
+            if (id != orderDetail.OrderId)
             {
                 return NotFound();
             }
@@ -106,13 +98,12 @@ namespace eStore.Controllers
             {
                 try
                 {
-
-                    _orderRepository.UpdateOrder(order);
+                    _context.Update(orderDetail);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(order.OrderId))
+                    if (!OrderDetailExists(orderDetail.OrderId))
                     {
                         return NotFound();
                     }
@@ -123,49 +114,49 @@ namespace eStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            return View(orderDetail);
         }
 
-        // GET: Orders/Delete/5
+        // GET: OrderDetails/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Orders == null)
+            if (id == null || _context.OrderDetails == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders
+            var orderDetail = await _context.OrderDetails
                 .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
+            if (orderDetail == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            return View(orderDetail);
         }
 
-        // POST: Orders/Delete/5
+        // POST: OrderDetails/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Orders == null)
+            if (_context.OrderDetails == null)
             {
-                return Problem("Entity set 'eStoreContext.Orders'  is null.");
+                return Problem("Entity set 'eStoreContext.OrderDetails'  is null.");
             }
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
+            var orderDetail = await _context.OrderDetails.FindAsync(id);
+            if (orderDetail != null)
             {
-                _context.Orders.Remove(order);
+                _context.OrderDetails.Remove(orderDetail);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderExists(int id)
+        private bool OrderDetailExists(int id)
         {
-          return (_context.Orders?.Any(e => e.OrderId == id)).GetValueOrDefault();
+          return (_context.OrderDetails?.Any(e => e.OrderId == id)).GetValueOrDefault();
         }
     }
 }
