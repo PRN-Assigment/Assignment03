@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using DataLayerDB.DataBaseScaffold;
 using DataLayer.Interface;
 using AutoMapper;
+using DataLayerDB.Interface;
+using DataLayerDB.Implement;
 
 namespace eStore.Controllers
 {
@@ -15,12 +17,14 @@ namespace eStore.Controllers
     {
         private readonly eStoreContext _context;
         private readonly IMemberRepository _memberRepository;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
         public ProductController(eStoreContext context, IMemberRepository memberRepository, IMapper mapper)
         {
             _context = context;
             _memberRepository = memberRepository;
+            _productRepository = new ProductRepository(context);
             _mapper = mapper;
         }
         // GET: Product
@@ -142,7 +146,7 @@ namespace eStore.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    _productRepository.UpdateProduct(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
