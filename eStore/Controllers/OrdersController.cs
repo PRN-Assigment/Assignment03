@@ -9,7 +9,9 @@ using DataLayerDB.DataBaseScaffold;
 
 using DataLayerDB.Interface;
 using DataLayerDB.Implement;
-
+using eStore.Models;
+using DataLayer.Interface;
+using AutoMapper;
 
 namespace eStore.Controllers
 {
@@ -18,12 +20,18 @@ namespace eStore.Controllers
         private readonly eStoreContext _context;
 
         private readonly IOrderRepository _orderRepository;
+        private readonly IMemberRepository _memberRepository;
+        private readonly IMapper _mapper;
 
-        public OrdersController(eStoreContext context)
+        public OrdersController(eStoreContext context, IMemberRepository memberRepository, IMapper mapper)
         {
             _context = context;
 
             _orderRepository = new OrderRepository(context);
+
+            _memberRepository = memberRepository;
+
+            _mapper = mapper;
         }
 
         // GET: Orders
@@ -55,7 +63,9 @@ namespace eStore.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
-            return View();
+            OrderViewModel order = new OrderViewModel();
+            order.Members = _mapper.Map<List<MemberViewModel>>(_memberRepository.GetMembers().ToList());
+            return View(order);
         }
 
         // POST: Orders/Create

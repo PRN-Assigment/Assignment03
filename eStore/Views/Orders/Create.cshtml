@@ -1,5 +1,4 @@
-﻿@model DataLayerDB.DataBaseScaffold.Order
-
+﻿@model OrderViewModel
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -15,8 +14,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="MemberId" class="control-label"></label>
-                <input asp-for="MemberId" class="form-control" />
-                <span asp-validation-for="MemberId" class="text-danger"></span>
+                <select asp-for="MemberId" >
+                    @foreach (var item in Model.Members)
+                    {
+                        <option value="@item.MemberId">@item.CompanyName</option>
+                    }
+                    ;
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="OrderDate" class="control-label"></label>
