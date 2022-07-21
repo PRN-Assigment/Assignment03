@@ -7,15 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataLayerDB.DataBaseScaffold;
 
+using DataLayerDB.Interface;
+using DataLayerDB.Implement;
+
+
 namespace eStore.Controllers
 {
     public class OrdersController : Controller
     {
         private readonly eStoreContext _context;
 
+        private readonly IOrderRepository _orderRepository;
+
         public OrdersController(eStoreContext context)
         {
             _context = context;
+
+            _orderRepository = new OrderRepository(context);
         }
 
         // GET: Orders
@@ -98,7 +106,8 @@ namespace eStore.Controllers
             {
                 try
                 {
-                    _context.Update(order);
+
+                    _orderRepository.UpdateOrder(order);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

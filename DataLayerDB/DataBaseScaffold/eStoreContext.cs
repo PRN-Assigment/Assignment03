@@ -21,14 +21,6 @@ namespace DataLayerDB.DataBaseScaffold
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=(local);uid=sa;pwd=123456;database=eStore;TrustServerCertificate=True");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Member>(entity =>
@@ -60,8 +52,10 @@ namespace DataLayerDB.DataBaseScaffold
 
             modelBuilder.Entity<Order>(entity =>
             {
-                entity.ToTable("Orders");
 
+                entity.HasKey(e => e.OrderId)
+                    .HasName("PK_Orders");
+                    
                 entity.Property(e => e.Freight).HasColumnType("money");
 
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");

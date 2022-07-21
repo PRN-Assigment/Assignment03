@@ -45,6 +45,7 @@ namespace eStore.Controllers
 
         public IActionResult Login()
         {
+
             return View("Login");
         }
 
@@ -56,7 +57,7 @@ namespace eStore.Controllers
             try
             {
                 member = _mapper.Map<MemberViewModel>(_memberRepository.Login(Username, Password));
-                if(member == null)
+                if (member == null)
                 {
                     status = false;
                     errorMessage = "Invalid Username or Password";
@@ -65,18 +66,46 @@ namespace eStore.Controllers
                 {
                     status = true;
                 }
-            } catch(Exception ex)
+            } catch (Exception ex)
             {
                 errorMessage = ex.Message;
                 status = false;
+            }
+
+            if (status)
+            {
+                HttpContext.Session.SetString("username", Username);
+                var admin = _memberRepository.GetInitAdmin();
+                if (Username.Equals(admin.Email))
+                {
+                    HttpContext.Session.SetString("Role", "Admin");
+                }
+                else
+                {
+                    HttpContext.Session.SetString("Role", "Member");
+                }
             }
 
             return new JsonResult(new
             {
                 status = status,
                 errorMessage = errorMessage,
-                member = member
+                member = member,
+                role = HttpContext.Session.GetString("Role")
             });
+        }
+
+        public ActionResult MemberUserProfile()
+        {
+            return View("MemberUserProfile");
+        }
+
+        public JsonResult GetMemberUserProfile()
+        {
+            string username = HttpContext.Session.GetString("username");
+            var member = _memberRepository.GetMemberByUsername(username);
+
+            return new JsonResult(member);
         }
     }
 }
