@@ -23,7 +23,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="OrderDate" class="control-label"></label>
+                <label asp-for="OrderDate" class="control-label" value="@DateTime.Today"></label>
                 <input asp-for="OrderDate" class="form-control" />
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>

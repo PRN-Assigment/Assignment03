@@ -7,16 +7,33 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataLayerDB.DataBaseScaffold;
 
+using DataLayerDB.Interface;
+using DataLayerDB.Implement;
+using eStore.Models;
+using DataLayer.Interface;
+using AutoMapper;
+
 namespace eStore.Controllers
 {
     public class OrderDetailsController : Controller
     {
         private readonly eStoreContext _context;
 
-        public OrderDetailsController(eStoreContext context)
+        private readonly IOrderDetailsRepository _orderDetailsRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
+
+        public OrderDetailsController(eStoreContext context, IProductRepository productRepository, IMapper mapper)
         {
             _context = context;
+            _orderDetailsRepository = new OrderDetailsRepository(context);
+            _productRepository = productRepository;
+            _mapper = mapper;
         }
+
+
+
+
 
         // GET: OrderDetails
         public async Task<IActionResult> Index(int OrderID)
@@ -47,7 +64,9 @@ namespace eStore.Controllers
         // GET: OrderDetails/Create
         public IActionResult Create()
         {
-            return View();
+            OrderDetailsViewModel detail = new OrderDetailsViewModel();
+            detail.Products = _mapper.Map<List<ProductViewModel>>(_productRepository.GetProducts().ToList());
+            return View(detail);
         }
 
         // POST: OrderDetails/Create

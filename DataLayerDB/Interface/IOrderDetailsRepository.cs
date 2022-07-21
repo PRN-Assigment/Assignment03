@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DataLayerDB.DataBaseScaffold;
 namespace DataLayerDB.Interface
 {
-    interface IOrderDetailsRepository
+    public interface IOrderDetailsRepository
     {
         void AddOrdersDetails(OrderDetail orderDetails);
         void DeleteOrdersDetails(OrderDetail orderDetails);
