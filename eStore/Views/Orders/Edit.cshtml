@@ -16,7 +16,8 @@
             <input type="hidden" asp-for="OrderId" />
             <div class="form-group">
                 <label asp-for="MemberId" class="control-label"></label>
-                <input asp-for="MemberId" class="form-control" />
+
+                <span>@Html.DisplayFor(model => model.MemberId)</span>
                 <span asp-validation-for="MemberId" class="text-danger"></span>
             </div>
             <div class="form-group">
