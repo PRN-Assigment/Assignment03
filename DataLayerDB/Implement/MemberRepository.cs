@@ -129,5 +129,11 @@ namespace DataLayer.Implement
 
             return admin;
         }
+
+        public Member GetMemberByUsername(string username)
+        {
+            var result = _dbSet.FirstOrDefault(x => x.Email.Equals(username));
+            return result;
+        }
     }
 }
