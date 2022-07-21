@@ -24,8 +24,9 @@ namespace eStore.Controllers
             _mapper = mapper;
         }
         // GET: Product
-        public async Task<IActionResult> Index(string txtProductName, int txtPrice)
+        public async Task<IActionResult> search(string txtProductName, int txtPrice)
         {
+            
             var product = _context.Products.ToList();
             if (!String.IsNullOrEmpty(txtProductName))
             {
@@ -47,21 +48,25 @@ namespace eStore.Controllers
                           //Problem("Entity set 'eStoreContext.Products'  is null.");
         }
 
-        public async Task<IActionResult> Search(string txtProductName, int txtPrice)
+        public async Task<IActionResult> Index(string txtProductName, int txtMinPrice, int txtMaxPrice)
         {
+
             var product = _context.Products.ToList();
             if (!String.IsNullOrEmpty(txtProductName))
             {
                 product = _context.Products.Where(m=>m.ProductName.Contains(txtProductName)).ToList();
             }
-            if(txtPrice != 0)
+            if(txtMinPrice > txtMaxPrice)
             {
-                product = _context.Products.Where(m=>m.UnitPrice==txtPrice).ToList();
+                int tmp = txtMaxPrice;
+                txtMaxPrice = txtMinPrice;
+                txtMinPrice = tmp;
             }
-            if(txtPrice !=0 && !String.IsNullOrEmpty(txtProductName))
+            if(txtMinPrice != 0 && txtMaxPrice != 0)
             {
-                product = _context.Products.Where(m => m.UnitPrice == txtPrice && m.ProductName.Contains(txtProductName)).ToList();
+                product = _context.Products.Where(m=>m.UnitPrice >= txtMinPrice && m.UnitPrice <= txtMaxPrice).ToList();
             }
+            
             return View(product);
         }
 
