@@ -44,5 +44,25 @@ namespace DataLayerDB.Implement
             var product = _dbContext.Products.FirstOrDefault(p=>p.ProductId==id);
             return product;
         }
+
+        public bool UpdateProduct(Product product)
+        {
+            var target = _dbSet.FirstOrDefault(x => x.ProductId == product.ProductId);
+            if (target != null)
+            {
+                target.ProductName = product.ProductName;
+                target.UnitPrice = product.UnitPrice;
+                target.UnitInStock = product.UnitInStock;
+                target.Weight = product.Weight;
+                target.CategoryId = product.CategoryId;
+                _dbSet.Update(target);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

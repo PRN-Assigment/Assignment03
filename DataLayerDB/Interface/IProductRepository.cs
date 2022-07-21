@@ -13,6 +13,6 @@ namespace DataLayerDB.Interface
         void AddProduct(Product product);
         void DeleteProduct(Product product);
         Product GetProductById(int? id);
-
+        bool UpdateProduct(Product product);
     }
 }
