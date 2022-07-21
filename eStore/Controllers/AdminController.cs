@@ -44,7 +44,7 @@ namespace eStore.Controllers
             return new JsonResult(memberList);
         }
 
-        public JsonResult SaveChanges(int MemberID, string Email, string CompanyName, string City, string Country)
+        public JsonResult SaveChanges(int MemberID, string Password, string Email, string CompanyName, string City, string Country)
         {
             var status = false;
             var errorMessage = "";
@@ -55,16 +55,91 @@ namespace eStore.Controllers
             member.CompanyName = CompanyName;
             member.City = City;
             member.Country = Country;
+            member.Password = Password;
+
+            if(Password == null)
+            {
+                try
+                {
+                    var result = _memberRepository.UpdateMember(_mapper.Map<Member>(member));
+                    status = true;
+                }
+                catch (Exception ex)
+                {
+                    status = false;
+                    errorMessage = ex.Message;
+                }
+            }
+            else
+            {
+                try
+                {
+                    var result = _memberRepository.AddMember(_mapper.Map<Member>(member));
+                    if(result)
+                    {
+                        status = true;
+                    }else
+                    {
+                        status = false;
+                        errorMessage = "Add failed somehow";
+                    }
+                }catch(Exception ex)
+                {
+                    errorMessage = ex.Message;
+                    status = false;
+                }
+            }
+           
+            return new JsonResult(new
+            {
+                status = status,
+                errorMessage = errorMessage
+            });
+        }
+
+        public JsonResult DeleteMember(int MemberID)
+        {
+            string errorMessage = "";
+            bool status = false;
 
             try
             {
-                var result = _memberRepository.UpdateMember(_mapper.Map<Member>(member));
+                var result = _memberRepository.DeleteMember(MemberID);
                 status = true;
             }catch(Exception ex)
             {
-                status = false;
                 errorMessage = ex.Message;
             }
+
+            return new JsonResult(new
+            {
+                status = status,
+                errorMessage = errorMessage
+            });
+        }
+        public JsonResult UpdateUserProfile(int MemberID, string Password, string Email, string CompanyName, string City, string Country)
+        {
+            var status = false;
+            var errorMessage = "";
+
+            MemberViewModel member = new MemberViewModel();
+            member.MemberId = MemberID;
+            member.Email = Email;
+            member.CompanyName = CompanyName;
+            member.City = City;
+            member.Country = Country;
+            member.Password = Password;
+
+                try
+                {
+                    var result = _memberRepository.UpdateMember(_mapper.Map<Member>(member));
+                    status = true;
+                }
+                catch (Exception ex)
+                {
+                    status = false;
+                    errorMessage = ex.Message;
+                }
 
             return new JsonResult(new
             {

@@ -18,5 +18,6 @@ namespace DataLayer.Interface
         int GetCurrentLastID();
         void InitAdmin();
         Member GetInitAdmin();
+        Member GetMemberByUsername(string username);
     }
 }

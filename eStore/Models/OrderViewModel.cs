@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DataLayerDB.DataBaseScaffold
+﻿
+namespace eStore.Models
 {
-    public partial class Order
+    public class OrderViewModel
     {
-
+       
         public int OrderId { get; set; }
         public int MemberId { get; set; }
         public DateTime OrderDate { get; set; }
