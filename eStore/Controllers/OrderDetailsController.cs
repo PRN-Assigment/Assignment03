@@ -19,7 +19,7 @@ namespace eStore.Controllers
         }
 
         // GET: OrderDetails
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int OrderID)
         {
               return _context.OrderDetails != null ? 
                           View(await _context.OrderDetails.ToListAsync()) :
