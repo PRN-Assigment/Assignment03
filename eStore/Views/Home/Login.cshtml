@@ -29,7 +29,7 @@ function Login() {
                 if (data.role == "Admin") {
                     window.location.href = "/Admin/ViewMemberList";
                 } else {
-					window.location.href = "/Admin/MemberUserProfile";
+					window.location.href = "/Home/MemberUserProfile";
 				}
             } else {
                 alert('Error: ' + data.errorMessage);

@@ -113,7 +113,9 @@ function EnableAdd() {
 }
 
 function SaveChanges() {
-     if ($('#txtEmail').val() == null || $('#txtEmail').val().trim().length < 1) {
+    
+
+    if ($('#txtEmail').val() == null || $('#txtEmail').val().trim().length < 1) {
         alert('Empty Email');
         return false;
     } else if ($('#txtCompanyName').val() == null || $('#txtCompanyName').val().trim().length < 1
@@ -128,8 +130,8 @@ function SaveChanges() {
         || $('#txtCountry').val().trim().length > 20) {
         alert('Country must be between 1 and 20 characters');
         return false;
-    } else {
-         $.ajax({
+    } else  {
+        $.ajax({
         type: 'POST',
         url: '/Admin/SaveChanges',
         data: {

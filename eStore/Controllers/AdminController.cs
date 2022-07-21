@@ -117,5 +117,35 @@ namespace eStore.Controllers
                 errorMessage = errorMessage
             });
         }
+        public JsonResult UpdateUserProfile(int MemberID, string Password, string Email, string CompanyName, string City, string Country)
+        {
+            var status = false;
+            var errorMessage = "";
+
+            MemberViewModel member = new MemberViewModel();
+            member.MemberId = MemberID;
+            member.Email = Email;
+            member.CompanyName = CompanyName;
+            member.City = City;
+            member.Country = Country;
+            member.Password = Password;
+
+                try
+                {
+                    var result = _memberRepository.UpdateMember(_mapper.Map<Member>(member));
+                    status = true;
+                }
+                catch (Exception ex)
+                {
+                    status = false;
+                    errorMessage = ex.Message;
+                }
+
+            return new JsonResult(new
+            {
+                status = status,
+                errorMessage = errorMessage
+            });
+        }
     }
 }
