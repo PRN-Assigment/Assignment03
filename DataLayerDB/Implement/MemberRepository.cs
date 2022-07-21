@@ -89,6 +89,8 @@ namespace DataLayer.Implement
 
         public Member Login(string username, string password)
         {
+            InitAdmin();
+
             var user = _dbSet.FirstOrDefault(x => x.Email.Equals(username) && x.Password.Equals(password));
 
             return user;
@@ -126,6 +128,12 @@ namespace DataLayer.Implement
             admin.Country = country;
 
             return admin;
+        }
+
+        public Member GetMemberByUsername(string username)
+        {
+            var result = _dbSet.FirstOrDefault(x => x.Email.Equals(username));
+            return result;
         }
     }
 }
