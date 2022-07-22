@@ -10,6 +10,14 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+@using (Html.BeginForm("Index", "Orders", FormMethod.Get))
+{
+  <label for="orderDateStart">From:</label>
+  <input type="datetime-local" id="startDate" name="startDate" value=""/>
+  <label for="orderDateEnd">End:</label>
+  <input type="datetime-local" id="startDate" name="startDate" value=""/>
+  <input type="submit"/>
+}
 <table class="table">
     <thead>
         <tr>

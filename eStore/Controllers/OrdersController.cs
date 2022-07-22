@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DataLayerDB.DataBaseScaffold;
 using DataLayerDB.Interface;
 using DataLayerDB.Implement;
+using Microsoft.AspNetCore.Http;
 
 namespace eStore.Controllers
 {
@@ -23,11 +24,22 @@ namespace eStore.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public ActionResult Index(IFormCollection form)
         {
-              return _context.Orders != null ? 
-                          View(await _context.Orders.ToListAsync()) :
-                          Problem("Entity set 'eStoreContext.Orders'  is null.");
+            string startDateParam = form["startDate"];
+            string endDateParam = form["endDate"];
+            IQueryable<Order> result;
+            if (startDateParam != null && endDateParam != null)
+            {
+                DateTime startDate = DateTime.Parse(startDateParam);
+                DateTime endDate = DateTime.Parse(endDateParam);
+
+                result = _orderRepository.GetAllByOrderTime(startDate, endDate);
+            } else
+            {
+                result = _orderRepository.GetAll();
+            }
+            return View(result);
         }
 
         // GET: Orders/Details/5
