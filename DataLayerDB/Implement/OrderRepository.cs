@@ -1,3 +1,4 @@
+
 ﻿using DataLayerDB.DataBaseScaffold;
 using DataLayerDB.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ namespace DataLayerDB.Implement
     {
         private eStoreContext _dbContext;
         DbSet<Order> _dbSet { get; set; }
+
+
         public OrderRepository(eStoreContext dbContext)
         {
             _dbContext = dbContext;

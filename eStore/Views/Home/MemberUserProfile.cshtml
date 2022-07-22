@@ -1,0 +1,169 @@
+﻿ <div class="row">
+        <div class="col-xl-4 order-xl-1 profile-mb-5 mb-xl-0">
+          <div class="profile-card card-profile shadow">
+            <div class="profile-row justify-content-center">
+              <div class="col-lg-3 order-lg-2">
+                <div class="card-profile-image">
+                  <a href="#">
+                    <img src="https://banner2.cleanpng.com/20180329/zue/kisspng-computer-icons-user-profile-person-5abd85306ff7f7.0592226715223698404586.jpg" class="rounded-circle">
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="profile-card-body pt-0 pt-md-4">
+              <div class="text-center m-t-120" style="margin-top:120px">
+                <h3>
+                  User<span class="font-weight-light"></span>
+                </h3>
+                <div class="h5 font-weight-300">
+                  <i class="ni location_pin mr-2"></i>TP HCM, VietNam
+                </div>
+                <div class="h5 mt-4">
+                  <i class="ni business_briefcase-24 mr-2"></i>Member
+                </div>
+                <hr class="profile-my-4">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-8 order-xl-2">
+          <div class="profile-card profile-bg-secondary shadow">
+            <div class="card-header bg-white border-0">
+              <div class="profile-row align-items-center">
+                <div class="col-8">
+                  <h3 class="mb-0">My Information</h3>
+                </div>
+              </div>
+            </div>
+            <div class="profile-card-body">
+              <form>
+                <h6 class="heading-small profile-text-muted profile-mb-4">User information</h6>
+                <div class="profile-pl-lg-4">
+                  <div class="profile-row">
+                    <div class="col-lg-6">
+                      <div class="profile-form-group focused">
+                        <input type="hidden" id="hdUserID" value="" />
+                        <label class="form-control-label" for="txtCompanyName">Company Name</label>
+                        <input type="text" id="txtCompanyName" class="form-control form-control-alternative" placeholder="Company Name" value="" readonly>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="profile-form-group">
+                        <label class="form-control-label" for="txtEmail">Email address</label>
+                        <input type="email" id="txtEmail" class="form-control form-control-alternative" placeholder="Email" value="" readonly>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="profile-row">
+                    <div class="col-lg-6">
+                      <div class="profile-form-group focused">
+                        <label class="form-control-label" for="txtCity">City</label>
+                        <input type="text" id="txtCity" class="form-control form-control-alternative" placeholder="City" value="" readonly>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="profile-form-group focused">
+                        <label class="form-control-label" for="txtCountry">Country</label>
+                        <input type="text" id="txtCountry" class="form-control form-control-alternative" placeholder="Country" value="" readonly>
+                      </div>
+                    </div>
+                  </div>
+                   <div class="profile-row">
+                    <div class="col-md-12">
+                      <div class="profile-form-group focused">
+                        <label class="form-control-label" for="txtPassword">Password</label>
+                        <input id="txtPassword" class="form-control form-control-alternative" placeholder="If you leave this field empty, old password will be used" value="" type="text" readonly>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+                <button id="btnEdit" onclick="EnableInput(1)">Edit Information</button>
+                <button id="btnSave" onclick="SaveChanges()">Save Changes</button>
+            </div>
+          </div>
+        </div>
+ </div>
+
+<script>
+$(document).ready(function() {
+
+    $.ajax({
+        type: 'POST',
+        url: '/Home/GetMemberUserProfile',
+        success: function(data) {
+            console.log(data);
+            $('#hdUserID').val(data.memberId);
+            $('#txtCompanyName').val(data.companyName);
+            $('#txtEmail').val(data.email);
+            $('#txtCity').val(data.city);
+            $('#txtCountry').val(data.country);
+            $('#txtPassword').val(data.password);
+        },
+        error: function() {
+            alert('Load Failed');
+        }
+    })
+});
+
+function EnableInput(flag) {
+    if (flag == 1) {
+        $('#hdUserID').attr('readonly', false);
+        $('#txtCompanyName').attr('readonly', false);
+        $('#txtCity').attr('readonly', false);
+        $('#txtCountry').attr('readonly', false);
+        $('#txtPassword').attr('readonly', false);
+    } else {
+        $('#hdUserID').attr('readonly', true);
+        $('#txtCompanyName').attr('readonly', true);
+        $('#txtCity').attr('readonly', true);
+        $('#txtCountry').attr('readonly', true);
+        $('#txtPassword').attr('readonly', true);
+    }
+
+}
+
+function SaveChanges() {
+    
+    if ($('#txtEmail').val() == null || $('#txtEmail').val().trim().length < 1) {
+        alert('Empty Email');
+        return false;
+    } else if ($('#txtCompanyName').val() == null || $('#txtCompanyName').val().trim().length < 1
+        || $('#txtCompanyName').val().trim().length > 40) {
+        alert('Company name must be between 1 and 40 characters');
+        return false;
+    } else if ($('#txtCity').val() == null || $('#txtCity').val().trim().length < 1
+        || $('#txtCity').val().trim().length > 20) {
+        alert('City must be between 1 and 20 characters');
+        return false;
+    } else if ($('#txtCountry').val() == null || $('#txtCountry').val().trim().length < 1
+        || $('#txtCountry').val().trim().length > 20) {
+        alert('Country must be between 1 and 20 characters');
+        return false;
+    } else  {
+        $.ajax({
+        type: 'POST',
+        url: '/Admin/UpdateUserProfile',
+        data: {
+            MemberID: $('#hdUserID').val(),
+            Email: $('#txtEmail').val(),
+            CompanyName: $('#txtCompanyName').val(),
+            City: $('#txtCity').val(),
+            Country: $('#txtCountry').val(),
+            Password: $('#txtPassword').val()
+        },
+        success: function(data) {
+            if (data.status) {
+                window.location.href = '/Home/MemberUserProfile';
+                EnableInput(0);
+            }else{
+                alert('Update Failed: ' + data.errorMessage);
+            }
+        },
+        error: function() {
+            alert('Unknown Error');
+        }
+    })
+    }   
+}
+</script>
