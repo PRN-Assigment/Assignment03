@@ -28,17 +28,18 @@ namespace eStore.Controllers
         }
 
         // GET: Orders
-        public ActionResult Index(IFormCollection form)
+        public ActionResult Index(IFormCollection form, String startDate, string endDate)
         {
-            string startDateParam = form["startDate"];
-            string endDateParam = form["endDate"];
+            //string startDateParam = form["startDate"];
+            //string endDateParam = form["endDate"];
             IQueryable<Order> result;
-            if (startDateParam != null && endDateParam != null)
+            if (startDate != null && endDate != null)
             {
-                DateTime startDate = DateTime.Parse(startDateParam);
-                DateTime endDate = DateTime.Parse(endDateParam);
+                
+                DateTime startDateParam = DateTime.Parse(startDate);
+                DateTime endDateParam = DateTime.Parse(endDate);
 
-                result = _orderRepository.GetAllByOrderTime(startDate, endDate);
+                result = _orderRepository.GetAllByOrderTime(startDateParam, endDateParam);
             } else
             {
                 result = _orderRepository.GetAll();
