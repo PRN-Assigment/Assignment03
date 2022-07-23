@@ -52,28 +52,30 @@ namespace DataLayerDB.DataBaseScaffold
 
             modelBuilder.Entity<Order>(entity =>
             {
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
-                entity.HasKey(e => e.OrderId)
-                    .HasName("PK_Orders");
-                    
                 entity.Property(e => e.Freight).HasColumnType("money");
 
                 entity.Property(e => e.MemberId).HasColumnName("MemberID");
 
                 entity.Property(e => e.OrderDate).HasColumnType("datetime");
 
-                entity.Property(e => e.OrderId).HasColumnName("OrderID");
-
                 entity.Property(e => e.RequireDate).HasColumnType("datetime");
 
                 entity.Property(e => e.ShippedDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Orders__Freight__286302EC");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => e.OrderId);
-
                 entity.ToTable("OrderDetail");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
@@ -91,14 +93,12 @@ namespace DataLayerDB.DataBaseScaffold
                 entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
                 entity.Property(e => e.ProductName)
-                    .IsRequired()
                     .HasMaxLength(40)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UnitPrice).HasColumnType("money");
 
                 entity.Property(e => e.Weight)
-                    .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
             });

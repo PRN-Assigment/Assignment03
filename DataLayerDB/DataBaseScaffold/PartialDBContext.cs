@@ -15,7 +15,7 @@ namespace DataLayerDB.DataBaseScaffold
             string connectionString;
 
             IConfiguration config = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", true, true).Build();
-            connectionString = config["ConnectionStrings:DefaultConection"];
+            connectionString = config["ConnectionStrings:DefaultConnection"];
 
             return connectionString;
         }

@@ -27,7 +27,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="OrderDate" class="control-label"></label>
+
                 <input asp-for="OrderDate" class="form-control"  value ="@DateTime.Today"/>
+
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -42,7 +44,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Freight" class="control-label"></label>
+
                 <input asp-for="Freight" class="form-control" min="0"/>
+
                 <span asp-validation-for="Freight" class="text-danger"></span>
             </div>
             <div class="form-group">

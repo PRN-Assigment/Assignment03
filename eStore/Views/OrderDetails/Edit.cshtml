@@ -26,6 +26,8 @@
                     }
                     ;
                 </select>
+
+
             <div class="form-group">
                 <label asp-for="UnitPrice" class="control-label"></label>
                 <input asp-for="UnitPrice" class="form-control" min="0"/>
@@ -38,7 +40,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Discount" class="control-label"></label>
+
                 <input asp-for="Discount" class="form-control"  min="0"/>
+
                 <span asp-validation-for="Discount" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -27,7 +27,7 @@ function Login() {
         success: function(data) {
             if (data.status) {
                 if (data.role == "Admin") {
-                    window.location.href = "/Admin/ViewMemberList";
+                    window.location.href = "/Home/Index";
                 } else {
 					window.location.href = "/Home/MemberUserProfile";
 				}

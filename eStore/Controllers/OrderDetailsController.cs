@@ -23,17 +23,26 @@ namespace eStore.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public OrderDetailsController(eStoreContext context, IProductRepository productRepository, IMapper mapper)
+
+        public object Session { get; private set; }
+
+        public OrderDetailsController(eStoreContext context, IProductRepository productRepository, IMapper mapper, IOrderDetailsRepository orderDetailsRepository)
         {
             _context = context;
-            _orderDetailsRepository = new OrderDetailsRepository(context);
+            _orderDetailsRepository = orderDetailsRepository;
+
             _productRepository = productRepository;
             _mapper = mapper;
         }
 
+
+
+
+
         // GET: OrderDetails
-        public async Task<IActionResult> Index(int OrderID)
+        public async Task<IActionResult> Index(int? OrderID)
         {
+
             var detail = _context.OrderDetails.Where(m=>m.OrderId == OrderID).ToList();
             var listDetail = _orderDetailsRepository.GetOrderDetailsByID(OrderID);
             if (listDetail.Count != 0)
@@ -45,12 +54,25 @@ namespace eStore.Controllers
               //return _context.OrderDetails != null ? 
                           //View(await _context.OrderDetails.ToListAsync()) :
                           //Problem("Entity set 'eStoreContext.OrderDetails'  is null.");
+
         }
 
         // GET: OrderDetails/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null || _context.OrderDetails == null)
+            //if (id == 0 || _context.OrderDetails == null)
+            //{
+            //    return Create(id);
+            //}
+            //var orderDetail = await _context.OrderDetails
+            //    .FirstOrDefaultAsync(m => m.OrderId == id);
+            //if (orderDetail == null)
+            //{
+            //    return Create(id);
+            //}
+            //    return View(orderDetail);
+
+            if (id == 0 || _context.OrderDetails == null)
             {
                 return NotFound();
             }
@@ -59,8 +81,13 @@ namespace eStore.Controllers
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (orderDetail == null)
             {
-                return NotFound();
+                return RedirectToAction("Create", new { OrderId = id});
             }
+            //else
+            //{
+            //    OrderDetailsViewModel detail = new OrderDetailsViewModel();
+            //    detail.orderDetails = orderDetail;
+            //}
 
             return View(orderDetail);
         }
@@ -68,6 +95,7 @@ namespace eStore.Controllers
         // GET: OrderDetails/Create
         public IActionResult Create(int OrderID)
         {
+
             var listDetail = _orderDetailsRepository.GetOrderDetailsByID(OrderID);
             if (listDetail.Count!=0)
             {               
@@ -77,6 +105,7 @@ namespace eStore.Controllers
             ViewBag.ID = OrderID; 
             detail.Products = _mapper.Map<List<ProductViewModel>>(_productRepository.GetProducts().ToList()); 
             return View(detail);
+
 
         }
 
@@ -88,8 +117,10 @@ namespace eStore.Controllers
         public async Task<IActionResult> Create([Bind("OrderId,ProductId,UnitPrice,Quantity,Discount")] OrderDetail orderDetail)
         {
             if (ModelState.IsValid)
+
             {
                 var id = orderDetail.OrderId;
+
                 _context.Add(orderDetail);
                 await _context.SaveChangesAsync();
                 //return RedirectToAction(nameof(Index));
@@ -99,17 +130,17 @@ namespace eStore.Controllers
         }
 
         // GET: OrderDetails/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.OrderDetails == null)
+            if (id == 0 || _context.OrderDetails == null)
             {
-                return NotFound();
+                return RedirectToAction("Create", new { OrderId = id });
             }
 
             var orderDetail = await _context.OrderDetails.FindAsync(id);
             if (orderDetail == null)
             {
-                return NotFound();
+                return RedirectToAction("Create", new { OrderId = id });
             }
             
             return View(orderDetail);
@@ -122,11 +153,13 @@ namespace eStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,UnitPrice,Quantity,Discount")] OrderDetail orderDetail)
         {
+
             
             if (id != orderDetail.OrderId)
             {
                 return NotFound();
             }
+
 
             if (ModelState.IsValid)
             {
@@ -185,8 +218,10 @@ namespace eStore.Controllers
                 _context.OrderDetails.Remove(orderDetail);
             }
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Index", new { OrderID = id });
             //return RedirectToAction(nameof(Index));
+
         }
 
         private bool OrderDetailExists(int id)

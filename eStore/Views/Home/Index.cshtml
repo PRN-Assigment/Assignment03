@@ -2,19 +2,32 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    
-<div>
-	<a href="@Url.Action("Login", "Home")">Login</a>
+<div style="text-align:center">
+    <h3>Welcome, Admin. Please select functions below</h3>
+    <div class="row" style="margin-top:10%">
+        <br />
+
+        <div class="col-12 col-md-6" onclick="ProductManagement()">
+                <img src="~/img/ProductIcon.jpg" width="40%" height="60%"/>
+                <br/>
+            	<h6>Product Management</h6>
+        </div>
+
+        <div class="col-12 col-md-6" onclick="OrderManagement()">
+                <img src="~/img/OrderIcon.png" width="40%" height="60%"/>
+                <br/>
+                <h6>Order Management</h6>
+        </div>
+
+    </div>
 </div>
 
-<div>
-	<a href="@Url.Action("Index", "Product")">Product</a>
-</div>
-<div>
+<script>
+function ProductManagement() {
+    window.location.href = "/Product/Index";
+}
 
-	<a href="@Url.Action("Index", "Orders")">Order</a>
-</div>
-</div>
+function OrderManagement() {
+    window.location.href = "/Orders/Index";
+}
+</script>

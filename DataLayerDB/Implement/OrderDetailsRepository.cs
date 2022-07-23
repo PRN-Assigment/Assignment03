@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using DataLayerDB.DataBaseScaffold;
 using DataLayerDB.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,7 @@ namespace DataLayerDB.Implement
         public OrderDetailsRepository(eStoreContext dbContext)
         {
             _dbContext = dbContext;
-            _dbSet = dbContext.Set<OrderDetail>();
+            _dbSet = dbContext.OrderDetails;
         }
 
         public void AddOrdersDetails(OrderDetail orderDetails)
@@ -36,6 +35,17 @@ namespace DataLayerDB.Implement
         {
             var orderDT = _dbContext.OrderDetails.Where(o => o.OrderId == id).ToList();
             return orderDT;
+        }
+
+        public IQueryable<OrderDetail> GetAllDetails()
+        {
+            return _dbSet;
+        }
+
+        public IQueryable<OrderDetail> GetAllOrdersDetailsByOrderId(int orderId)
+        {
+            var result = _dbContext.OrderDetails.Where(x => x.OrderId == orderId);
+            return result;
         }
     }
 }
