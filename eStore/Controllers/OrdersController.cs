@@ -98,9 +98,14 @@ namespace eStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderId,MemberId,OrderDate,RequireDate,ShippedDate,Freight")] Order order)
         {
+            
             if (ModelState.IsValid)
             {
-                _context.Add(order);
+                if (order.OrderDate < order.RequireDate)
+                {
+                    return View(order);
+                }
+                    _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

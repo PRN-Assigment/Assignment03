@@ -1,5 +1,4 @@
-﻿@model DataLayerDB.DataBaseScaffold.Order
-
+﻿@model OrderViewModel
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -17,12 +16,17 @@
             <div class="form-group">
                 <label asp-for="MemberId" class="control-label"></label>
 
-                <span>@Html.DisplayFor(model => model.MemberId)</span>
-                <span asp-validation-for="MemberId" class="text-danger"></span>
+                <select asp-for="MemberId" >
+                    @foreach (var item in Model.Members)
+                    {
+                        <option value="@item.MemberId">@item.CompanyName</option>
+                    }
+                    ;
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="OrderDate" class="control-label"></label>
-                <input asp-for="OrderDate" class="form-control" />
+                <input asp-for="OrderDate" class="form-control" value="@DateTime.Today"/>
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -37,7 +41,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Freight" class="control-label"></label>
-                <input asp-for="Freight" class="form-control" />
+                <input asp-for="Freight" class="form-control" min="0"/>
                 <span asp-validation-for="Freight" class="text-danger"></span>
             </div>
             <div class="form-group">

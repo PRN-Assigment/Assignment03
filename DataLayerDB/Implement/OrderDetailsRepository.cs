@@ -16,7 +16,7 @@ namespace DataLayerDB.Implement
         public OrderDetailsRepository(eStoreContext dbContext)
         {
             _dbContext = dbContext;
-            _dbSet = dbContext.Set<OrderDetail>();
+            _dbSet = dbContext.OrderDetails;
         }
 
         public void AddOrdersDetails(OrderDetail orderDetails)
@@ -37,10 +37,9 @@ namespace DataLayerDB.Implement
             return orderDT;
         }
 
-        public IQueryable<OrderDetail> GetAllOrdersDetailsByOrderId(int orderId)
+        public IQueryable<OrderDetail> GetAllDetails()
         {
-            var result = _dbContext.OrderDetails.Where(x => x.OrderId == orderId);
-            return result;
+            return _dbSet;
         }
     }
 }
