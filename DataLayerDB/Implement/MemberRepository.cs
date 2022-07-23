@@ -27,7 +27,7 @@ namespace DataLayer.Implement
         {
             try
             {
-                int id = GetCurrentLastID() + 1;
+                int id = GetCurrentLastID() + 2;
                 member.MemberId = id;
                 _dbSet.Add(member);
                 _dbContext.SaveChanges();

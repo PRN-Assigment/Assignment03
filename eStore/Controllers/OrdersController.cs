@@ -113,17 +113,22 @@ namespace eStore.Controllers
         }
 
         // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null || _context.Orders == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
+            var order = _mapper.Map<OrderViewModel>(_orderRepository.GetById(id));
+
             if (order == null)
             {
                 return NotFound();
+            }
+            else
+            {
+                order.Members = _mapper.Map<List<MemberViewModel>>(_memberRepository.GetMembers());
             }
             return View(order);
         }
@@ -135,6 +140,8 @@ namespace eStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderId,MemberId,OrderDate,RequireDate,ShippedDate,Freight")] Order order)
         {
+            var result = new OrderViewModel();
+            result.Members = new List<MemberViewModel>();
             if (id != order.OrderId)
             {
                 return NotFound();
@@ -146,7 +153,8 @@ namespace eStore.Controllers
                 {
 
                     _orderRepository.UpdateOrder(order);
-                    await _context.SaveChangesAsync();
+                    result = _mapper.Map<OrderViewModel>(order);
+                    result.Members = _mapper.Map<List<MemberViewModel>>(_memberRepository.GetMembers());
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -161,7 +169,12 @@ namespace eStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            else
+            {
+                result = _mapper.Map<OrderViewModel>(order);
+                result.Members = _mapper.Map<List<MemberViewModel>>(_memberRepository.GetMembers());
+            }
+            return View(result);
         }
 
         // GET: Orders/Delete/5

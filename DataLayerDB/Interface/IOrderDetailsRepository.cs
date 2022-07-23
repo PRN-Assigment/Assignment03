@@ -13,6 +13,5 @@ namespace DataLayerDB.Interface
 
         OrderDetail GetOrderDetailsByID(int id);
         IQueryable<OrderDetail> GetAllOrdersDetailsByOrderId(int orderId);
-
     }
 }
