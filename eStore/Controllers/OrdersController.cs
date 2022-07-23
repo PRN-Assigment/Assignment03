@@ -9,6 +9,7 @@ using DataLayerDB.DataBaseScaffold;
 
 using DataLayerDB.Interface;
 using DataLayerDB.Implement;
+
 using Microsoft.AspNetCore.Http;
 using eStore.Models;
 
@@ -19,6 +20,7 @@ namespace eStore.Controllers
         private readonly eStoreContext _context;
 
         private readonly IOrderRepository _orderRepository;
+
         private readonly IOrderDetailsRepository _orderDetailRepository;
 
         public OrdersController(eStoreContext context, IOrderDetailsRepository orderDetailsRepository, IOrderRepository orderRepository)
@@ -73,7 +75,9 @@ namespace eStore.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
-            return View();
+            OrderViewModel order = new OrderViewModel();
+            order.Members = _mapper.Map<List<MemberViewModel>>(_memberRepository.GetMembers().ToList());
+            return View(order);
         }
 
         // POST: Orders/Create

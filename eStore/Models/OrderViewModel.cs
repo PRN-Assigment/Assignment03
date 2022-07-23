@@ -10,5 +10,6 @@ namespace eStore.Models
         public DateTime? RequireDate { get; set; }
         public DateTime? ShippedDate { get; set; }
         public decimal? Freight { get; set; }
+        public List<MemberViewModel> Members { get; set; }
     }
 }
