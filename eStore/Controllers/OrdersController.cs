@@ -12,6 +12,8 @@ using DataLayerDB.Implement;
 
 using Microsoft.AspNetCore.Http;
 using eStore.Models;
+using DataLayer.Interface;
+using AutoMapper;
 
 namespace eStore.Controllers
 {
@@ -23,13 +25,21 @@ namespace eStore.Controllers
 
         private readonly IOrderDetailsRepository _orderDetailRepository;
 
-        public OrdersController(eStoreContext context, IMemberRepository memberRepository, IMapper mapper)
+        private readonly IMemberRepository _memberRepository;
+
+        private readonly IMapper _mapper;
+
+        public OrdersController(eStoreContext context, IMemberRepository memberRepository, IMapper mapper, IOrderDetailsRepository orderDetailRepository, IOrderRepository orderRepository)
         {
             _context = context;
 
-            _orderRepository = new OrderRepository(context);
+            _orderRepository = orderRepository;
 
-            _orderDetailRepository = new OrderDetailsRepository(context);
+            _orderDetailRepository = orderDetailRepository;
+
+            _memberRepository = memberRepository;
+
+            _mapper = mapper;
         }
 
         // GET: Orders
