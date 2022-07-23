@@ -2,6 +2,8 @@
 {
     public class OrderDetailsViewModel
     {
+
+        
         public int OrderId { get; set; }
         public int ProductId { get; set; }
         public decimal UnitPrice { get; set; }
@@ -9,6 +11,6 @@
         public double Discount { get; set; }
 
         public List<ProductViewModel> Products { get; set; }
-        public List<OrderViewModel> Order { get; set; }
+        public OrderDetailsViewModel orderDetails { get; set }
     }
 }

@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Order </h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -59,11 +59,10 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-
-                <a href="@Url.Action("Index", "OrderDetails", new{
+                <a asp-action="Details" asp-controller="OrderDetails"  asp-route-id="@item.OrderId"> Details</a>|
+@*                <a href="@Url.Action("Index", "OrderDetails", new{
                     OrderID = @item.OrderId
-                })">Details</a> |
-                
+                })">Details</a> |*@                
                 <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
 
             </td>
