@@ -41,5 +41,11 @@ namespace DataLayerDB.Implement
         {
             return _dbSet;
         }
+
+        public IQueryable<OrderDetail> GetAllOrdersDetailsByOrderId(int orderId)
+        {
+            var result = _dbContext.OrderDetails.Where(x => x.OrderId == orderId);
+            return result;
+        }
     }
 }

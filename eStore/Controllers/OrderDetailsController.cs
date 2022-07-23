@@ -25,10 +25,10 @@ namespace eStore.Controllers
 
         public object Session { get; private set; }
 
-        public OrderDetailsController(eStoreContext context, IProductRepository productRepository, IMapper mapper)
+        public OrderDetailsController(eStoreContext context, IProductRepository productRepository, IMapper mapper, IOrderDetailsRepository orderDetailsRepository)
         {
             _context = context;
-            _orderDetailsRepository = new OrderDetailsRepository(context);
+            _orderDetailsRepository = orderDetailsRepository;
             _productRepository = productRepository;
             _mapper = mapper;
         }
