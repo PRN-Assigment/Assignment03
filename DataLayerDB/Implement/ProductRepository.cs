@@ -35,7 +35,7 @@ namespace DataLayerDB.Implement
 
         public IQueryable<Product> GetProducts()
         {
-            var result = _dbContext.Products;
+            var result = _dbSet;
             return result;
         }
 
