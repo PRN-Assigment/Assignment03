@@ -15,6 +15,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDbContext<eStoreContext>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
 
 builder.Services.AddSession();
 

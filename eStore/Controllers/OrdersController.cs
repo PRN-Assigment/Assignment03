@@ -21,12 +21,12 @@ namespace eStore.Controllers
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderDetailsRepository _orderDetailRepository;
 
-        public OrdersController(eStoreContext context)
+        public OrdersController(eStoreContext context, IOrderDetailsRepository orderDetailsRepository, IOrderRepository orderRepository)
         {
             _context = context;
 
-            _orderRepository = new OrderRepository(context);
-            _orderDetailRepository = new OrderDetailsRepository(context);
+            _orderRepository = orderRepository;
+            _orderDetailRepository = orderDetailsRepository;
         }
 
         // GET: Orders
