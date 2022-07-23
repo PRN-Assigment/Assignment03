@@ -19,6 +19,12 @@
                 <h6>Order Management</h6>
         </div>
 
+        <div class="col-12 col-md-6" onclick="MemberManagement()">
+                <img src="~/img/MemberIcon.jpg" width="40%" height="60%"/>
+                <br/>
+                <h6>Member Management</h6>
+        </div>
+
     </div>
 </div>
 
@@ -29,5 +35,9 @@ function ProductManagement() {
 
 function OrderManagement() {
     window.location.href = "/Orders/Index";
+}
+
+function MemberManagement() {
+    window.location.href = "/Admin/ViewMemberList";
 }
 </script>
