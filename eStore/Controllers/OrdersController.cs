@@ -9,9 +9,9 @@ using DataLayerDB.DataBaseScaffold;
 
 using DataLayerDB.Interface;
 using DataLayerDB.Implement;
+
+using Microsoft.AspNetCore.Http;
 using eStore.Models;
-using DataLayer.Interface;
-using AutoMapper;
 
 namespace eStore.Controllers
 {
@@ -20,8 +20,8 @@ namespace eStore.Controllers
         private readonly eStoreContext _context;
 
         private readonly IOrderRepository _orderRepository;
-        private readonly IMemberRepository _memberRepository;
-        private readonly IMapper _mapper;
+
+        private readonly IOrderDetailsRepository _orderDetailRepository;
 
         public OrdersController(eStoreContext context, IMemberRepository memberRepository, IMapper mapper)
         {
@@ -29,35 +29,48 @@ namespace eStore.Controllers
 
             _orderRepository = new OrderRepository(context);
 
-            _memberRepository = memberRepository;
-
-            _mapper = mapper;
+            _orderDetailRepository = new OrderDetailsRepository(context);
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public ActionResult Index(String startDate, string endDate)
         {
-              return _context.Orders != null ? 
-                          View(await _context.Orders.ToListAsync()) :
-                          Problem("Entity set 'eStoreContext.Orders'  is null.");
+            IQueryable<Order> result;
+            if (startDate != null && endDate != null)
+            {
+                
+                DateTime startDateParam = DateTime.Parse(startDate);
+                DateTime endDateParam = DateTime.Parse(endDate);
+
+                result = _orderRepository.GetAllByOrderTime(startDateParam, endDateParam);
+            } else
+            {
+                result = _orderRepository.GetAll();
+            }
+            return View(result);
         }
 
         // GET: Orders/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public ActionResult Details(int? id)
         {
             if (id == null || _context.Orders == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(m => m.OrderId == id);
+            var order = _orderRepository.GetById((int)id);
+            
             if (order == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            var orderDetails = _orderDetailRepository.GetAllOrdersDetailsByOrderId(order.OrderId);
+
+            OrderStatisticViewModel result = new OrderStatisticViewModel();
+            result.Order = order;
+            result.OrderDetails = orderDetails.ToList();
+            return View(result);
         }
 
         // GET: Orders/Create
