@@ -31,9 +31,9 @@ namespace DataLayerDB.Implement
             _dbContext.SaveChanges();
         }
 
-        public OrderDetail GetOrderDetailsByID(int? id)
+        public List<OrderDetail> GetOrderDetailsByID(int? id)
         {
-            var orderDT = _dbContext.OrderDetails.FirstOrDefault(o => o.OrderId == id);
+            var orderDT = _dbContext.OrderDetails.Where(o => o.OrderId == id).ToList();
             return orderDT;
         }
 
