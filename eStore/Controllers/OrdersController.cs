@@ -75,11 +75,11 @@ namespace eStore.Controllers
                 return NotFound();
             }
 
-            var orderDetails = _orderDetailRepository.GetAllOrdersDetailsByOrderId(order.OrderId);
+            //var orderDetails = _orderDetailRepository.GetAllOrdersDetailsByOrderId(order.OrderId);
 
             OrderStatisticViewModel result = new OrderStatisticViewModel();
             result.Order = order;
-            result.OrderDetails = orderDetails.ToList();
+            //result.OrderDetails = orderDetails.ToList();
             return View(result);
         }
 
