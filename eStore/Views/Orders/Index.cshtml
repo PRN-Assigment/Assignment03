@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DataLayerDB.DataBaseScaffold.Order>
+﻿@model List<OrderViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -18,7 +18,15 @@
             </div>   
         </div>
     </div>
-
+    <p>Filt order by order date</p>
+@using (Html.BeginForm("Index", "Orders", FormMethod.Get))
+{
+  <label for="orderDateStart">From:</label>
+  <input type="datetime-local" id="startDate" name="startDate" value=""/>
+  <label for="orderDateEnd">End:</label>
+  <input type="datetime-local" id="endDate" name="endDate" value=""/>
+  <button type="submit">Apply Filter</button>
+}
 
     <div class="card-body p-3">
         <table class="table table-bordered table-hover">

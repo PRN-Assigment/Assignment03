@@ -51,6 +51,13 @@ namespace DataLayerDB.Implement
             return result;
         }
 
+        public int AddOrder(Order order)
+        {
+            var last = _dbSet.Count() + 2;
+            order.OrderId = last;
+            _dbSet.Add(order);
+            return _dbContext.SaveChanges();
+        }
         public Order? GetById(int id)
         {
             return _dbSet.FirstOrDefault(x => x.OrderId == id);

@@ -45,17 +45,17 @@ namespace eStore.Controllers
         // GET: Orders
         public ActionResult Index(String startDate, string endDate)
         {
-            IQueryable<Order> result;
+            List<OrderViewModel> result;
             if (startDate != null && endDate != null)
             {
                 
                 DateTime startDateParam = DateTime.Parse(startDate);
                 DateTime endDateParam = DateTime.Parse(endDate);
 
-                result = _orderRepository.GetAllByOrderTime(startDateParam, endDateParam);
+                result = _mapper.Map<List<OrderViewModel>>(_orderRepository.GetAllByOrderTime(startDateParam, endDateParam));
             } else
             {
-                result = _orderRepository.GetAll();
+                result = _mapper.Map<List<OrderViewModel>>(_orderRepository.GetAll());
             }
             return View(result);
         }
@@ -98,18 +98,20 @@ namespace eStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderId,MemberId,OrderDate,RequireDate,ShippedDate,Freight")] Order order)
         {
-            
+            var result = new OrderViewModel();
+            result.Members = _mapper.Map<List<MemberViewModel>>(_memberRepository.GetMembers());
+            var orderList = _mapper.Map<List<OrderViewModel>>(_orderRepository.GetAll());
             if (ModelState.IsValid)
             {
                 if (order.OrderDate < order.RequireDate)
                 {
-                    return View(order);
+                    result = _mapper.Map<OrderViewModel>(order);
+                    return View(result);
                 }
-                    _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _orderRepository.AddOrder(order);
+                return View("Index", orderList);
             }
-            return View(order);
+            return View("Index", orderList);
         }
 
         // GET: Orders/Edit/5
