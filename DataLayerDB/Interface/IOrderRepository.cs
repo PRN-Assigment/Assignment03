@@ -14,5 +14,6 @@ namespace DataLayerDB.Interface
         IQueryable<Order> GetAll();
         IQueryable<Order> GetAllByOrderTime(DateTime startDate, DateTime endDate);
         Order? GetById(int id);
+        int AddOrder(Order order);
     }
 }
