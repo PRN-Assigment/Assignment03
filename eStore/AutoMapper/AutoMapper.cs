@@ -11,6 +11,7 @@ namespace eStore.AutoMapper
         public AutoMapper()
         {
             CreateMap<Member,MemberViewModel>().ReverseMap();
+            CreateMap<Product, ProductViewModel>().ReverseMap();
         }
     }
 }

@@ -1,27 +1,36 @@
-﻿@model DataLayerDB.DataBaseScaffold.OrderDetail
-
+﻿
+@model OrderDetailsViewModel
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="card">
+    <div class="card-header ">
+        <div class="row">
+            <div class="col-md-6">
+                <strong class="text-uppercase text-black-50">Create Order details</strong>
+            </div>
+        </div>
+    </div>
 
-<h1>Create</h1>
-
-<h4>OrderDetail</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    <div class="card-body p-3">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="OrderId" class="control-label"></label>
-                <input asp-for="OrderId" class="form-control" />
+                <input asp-for="OrderId" value="@ViewBag.ID" readonly class="form-control" />
                 <span asp-validation-for="OrderId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductId" class="control-label"></label>
-                <input asp-for="ProductId" class="form-control" />
-                <span asp-validation-for="ProductId" class="text-danger"></span>
+                <select asp-for="ProductId" >
+                    @foreach (var item in Model.Products)
+                    {
+                        <option value="@item.ProductId">@item.ProductName</option>
+                    }
+                    ;
+                </select>
+
             </div>
             <div class="form-group">
                 <label asp-for="UnitPrice" class="control-label"></label>
@@ -45,9 +54,6 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

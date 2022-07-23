@@ -164,7 +164,8 @@ namespace eStore.Controllers
                 return Problem("Entity set 'eStoreContext.Orders'  is null.");
             }
             var order = await _context.Orders.FindAsync(id);
-            if (order != null)
+            var orderDetail = await _context.OrderDetails.FindAsync(id);
+            if (order != null && orderDetail == null)
             {
                 _context.Orders.Remove(order);
             }

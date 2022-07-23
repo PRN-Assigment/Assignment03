@@ -7,23 +7,43 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataLayerDB.DataBaseScaffold;
 
+using DataLayerDB.Interface;
+using DataLayerDB.Implement;
+using eStore.Models;
+using DataLayer.Interface;
+using AutoMapper;
+
 namespace eStore.Controllers
 {
     public class OrderDetailsController : Controller
     {
         private readonly eStoreContext _context;
 
-        public OrderDetailsController(eStoreContext context)
+        private readonly IOrderDetailsRepository _orderDetailsRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
+
+        public OrderDetailsController(eStoreContext context, IProductRepository productRepository, IMapper mapper)
         {
             _context = context;
+            _orderDetailsRepository = new OrderDetailsRepository(context);
+            _productRepository = productRepository;
+            _mapper = mapper;
         }
+
+
+
+
 
         // GET: OrderDetails
         public async Task<IActionResult> Index(int OrderID)
         {
-              return _context.OrderDetails != null ? 
-                          View(await _context.OrderDetails.ToListAsync()) :
-                          Problem("Entity set 'eStoreContext.OrderDetails'  is null.");
+            var detail = _context.OrderDetails.Where(m=>m.OrderId == OrderID).ToList();
+            ViewBag.ID = OrderID.ToString();
+            return View(detail);
+              //return _context.OrderDetails != null ? 
+                          //View(await _context.OrderDetails.ToListAsync()) :
+                          //Problem("Entity set 'eStoreContext.OrderDetails'  is null.");
         }
 
         // GET: OrderDetails/Details/5
@@ -45,9 +65,19 @@ namespace eStore.Controllers
         }
 
         // GET: OrderDetails/Create
-        public IActionResult Create()
+        public IActionResult Create(int OrderID)
         {
-            return View();
+            var listDetail = _orderDetailsRepository.GetOrderDetailsByID(OrderID);
+            if(listDetail.Count!=0)
+            {
+                return RedirectToAction("Index", new { OrderID = OrderID });
+            }
+            
+            OrderDetailsViewModel detail = new OrderDetailsViewModel();
+            ViewBag.ID = OrderID;
+            detail.Products = _mapper.Map<List<ProductViewModel>>(_productRepository.GetProducts().ToList());
+            return View(detail);
+
         }
 
         // POST: OrderDetails/Create
@@ -59,9 +89,11 @@ namespace eStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                var id = orderDetail.OrderId;
                 _context.Add(orderDetail);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new {OrderID = id});
             }
             return View(orderDetail);
         }
@@ -79,6 +111,7 @@ namespace eStore.Controllers
             {
                 return NotFound();
             }
+            
             return View(orderDetail);
         }
 
@@ -89,6 +122,7 @@ namespace eStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,UnitPrice,Quantity,Discount")] OrderDetail orderDetail)
         {
+            
             if (id != orderDetail.OrderId)
             {
                 return NotFound();
@@ -112,7 +146,8 @@ namespace eStore.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { OrderID = id });
+                //return RedirectToAction(nameof(Index));
             }
             return View(orderDetail);
         }
@@ -151,7 +186,8 @@ namespace eStore.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", new { OrderID = id });
+            //return RedirectToAction(nameof(Index));
         }
 
         private bool OrderDetailExists(int id)
