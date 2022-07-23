@@ -27,13 +27,16 @@ namespace eStore.Controllers
 
         private readonly IMemberRepository _memberRepository;
 
-        public OrdersController(eStoreContext context, IOrderDetailsRepository orderDetailsRepository, IOrderRepository orderRepository, IMapper _mapper, IMemberRepository memberRepository)
+        private readonly IMapper _mapper;
+
+        public OrdersController(eStoreContext context, IOrderDetailsRepository orderDetailsRepository, IOrderRepository orderRepository, IMapper mapper, IMemberRepository memberRepository)
         {
             _context = context;
 
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailsRepository;
             _memberRepository = memberRepository;
+            _mapper = mapper;
         }
 
         // GET: Orders
