@@ -11,6 +11,8 @@
         public double Discount { get; set; }
 
         public List<ProductViewModel> Products { get; set; }
+
         public OrderDetailsViewModel orderDetails { get; set; }
+
     }
 }

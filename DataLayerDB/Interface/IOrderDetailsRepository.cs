@@ -10,7 +10,9 @@ namespace DataLayerDB.Interface
     {
         void AddOrdersDetails(OrderDetail orderDetails);
         void DeleteOrdersDetails(OrderDetail orderDetails);
+
         OrderDetail GetOrderDetailsByID(int? id);
         IQueryable<OrderDetail> GetAllOrdersDetailsByOrderId(int orderId);
+
     }
 }

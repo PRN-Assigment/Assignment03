@@ -23,12 +23,14 @@ namespace eStore.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
+
         public object Session { get; private set; }
 
         public OrderDetailsController(eStoreContext context, IProductRepository productRepository, IMapper mapper, IOrderDetailsRepository orderDetailsRepository)
         {
             _context = context;
             _orderDetailsRepository = orderDetailsRepository;
+
             _productRepository = productRepository;
             _mapper = mapper;
         }
@@ -40,9 +42,19 @@ namespace eStore.Controllers
         // GET: OrderDetails
         public async Task<IActionResult> Index(int? OrderID)
         {
-            return _context.OrderDetails != null ? 
-                          View(await _context.OrderDetails.ToListAsync()) :
-                          Problem("Entity set 'eStoreContext.OrderDetails'  is null.");
+
+            var detail = _context.OrderDetails.Where(m=>m.OrderId == OrderID).ToList();
+            var listDetail = _orderDetailsRepository.GetOrderDetailsByID(OrderID);
+            if (listDetail.Count != 0)
+            {
+                ViewBag.Message = "OrderDetails have been exist! Can't Create";
+            }
+                ViewBag.ID = OrderID.ToString();
+            return View(detail);
+              //return _context.OrderDetails != null ? 
+                          //View(await _context.OrderDetails.ToListAsync()) :
+                          //Problem("Entity set 'eStoreContext.OrderDetails'  is null.");
+
         }
 
         // GET: OrderDetails/Details/5
@@ -83,10 +95,18 @@ namespace eStore.Controllers
         // GET: OrderDetails/Create
         public IActionResult Create(int OrderID)
         {
+
+            var listDetail = _orderDetailsRepository.GetOrderDetailsByID(OrderID);
+            if (listDetail.Count!=0)
+            {               
+                return RedirectToAction("Index", new { OrderID = OrderID });
+            }
             OrderDetailsViewModel detail = new OrderDetailsViewModel();
-            detail.Products = _mapper.Map<List<ProductViewModel>>(_productRepository.GetProducts().ToList());
-            detail.OrderId = OrderID ;
+            ViewBag.ID = OrderID; 
+            detail.Products = _mapper.Map<List<ProductViewModel>>(_productRepository.GetProducts().ToList()); 
             return View(detail);
+
+
         }
 
         // POST: OrderDetails/Create
@@ -97,12 +117,14 @@ namespace eStore.Controllers
         public async Task<IActionResult> Create([Bind("OrderId,ProductId,UnitPrice,Quantity,Discount")] OrderDetail orderDetail)
         {
             if (ModelState.IsValid)
-            {   
-                int orderId = orderDetail.OrderId;
+
+            {
+                var id = orderDetail.OrderId;
 
                 _context.Add(orderDetail);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new {OrderID = id});
             }
             return View(orderDetail);
         }
@@ -120,6 +142,7 @@ namespace eStore.Controllers
             {
                 return RedirectToAction("Create", new { OrderId = id });
             }
+            
             return View(orderDetail);
         }
 
@@ -130,6 +153,13 @@ namespace eStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,UnitPrice,Quantity,Discount")] OrderDetail orderDetail)
         {
+
+            
+            if (id != orderDetail.OrderId)
+            {
+                return NotFound();
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -149,7 +179,8 @@ namespace eStore.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { OrderID = id });
+                //return RedirectToAction(nameof(Index));
             }
             return View(orderDetail);
         }
@@ -186,9 +217,11 @@ namespace eStore.Controllers
             {
                 _context.OrderDetails.Remove(orderDetail);
             }
-            
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Details));
+
+            return RedirectToAction("Index", new { OrderID = id });
+            //return RedirectToAction(nameof(Index));
+
         }
 
         private bool OrderDetailExists(int id)
