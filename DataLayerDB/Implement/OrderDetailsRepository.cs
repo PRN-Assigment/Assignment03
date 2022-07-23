@@ -37,6 +37,7 @@ namespace DataLayerDB.Implement
             var orderDT = _dbContext.OrderDetails.FirstOrDefault(o => o.OrderId == id);
             return orderDT;
         }
+
         public IQueryable<OrderDetail> GetAllDetails()
         {
             return _dbSet;

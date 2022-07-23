@@ -44,5 +44,16 @@ namespace DataLayerDB.Implement
         {
             return _dbSet;
         }
+
+        public IQueryable<Order> GetAllByOrderTime(DateTime startDate, DateTime endDate)
+        {
+            IQueryable<Order> result = _dbSet.Where(x => x.OrderDate > startDate && x.OrderDate < endDate);
+            return result;
+        }
+
+        public Order? GetById(int id)
+        {
+            return _dbSet.FirstOrDefault(x => x.OrderId == id);
+        }
     }
 }
