@@ -164,14 +164,18 @@ namespace eStore.Controllers
                 return Problem("Entity set 'eStoreContext.Orders'  is null.");
             }
             var order = await _context.Orders.FindAsync(id);
-            var orderDetail = await _context.OrderDetails.FindAsync(id);
+            var orderDetail = await _context.OrderDetails.FindAsync(id); 
             if (order != null && orderDetail == null)
             {
                 _context.Orders.Remove(order);
             }
-            
+          
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (orderDetail != null)
+            {
+                ViewBag.Message = "Order details is exist can't remove!";
+            }
+            return RedirectToAction(nameof(Index),ViewBag.Message);
         }
 
         private bool OrderExists(int id)

@@ -31,15 +31,16 @@ namespace eStore.Controllers
             _mapper = mapper;
         }
 
-
-
-
-
         // GET: OrderDetails
         public async Task<IActionResult> Index(int OrderID)
         {
             var detail = _context.OrderDetails.Where(m=>m.OrderId == OrderID).ToList();
-            ViewBag.ID = OrderID.ToString();
+            var listDetail = _orderDetailsRepository.GetOrderDetailsByID(OrderID);
+            if (listDetail.Count != 0)
+            {
+                ViewBag.Message = "OrderDetails have been exist! Can't Create";
+            }
+                ViewBag.ID = OrderID.ToString();
             return View(detail);
               //return _context.OrderDetails != null ? 
                           //View(await _context.OrderDetails.ToListAsync()) :
@@ -68,14 +69,13 @@ namespace eStore.Controllers
         public IActionResult Create(int OrderID)
         {
             var listDetail = _orderDetailsRepository.GetOrderDetailsByID(OrderID);
-            if(listDetail.Count!=0)
-            {
+            if (listDetail.Count!=0)
+            {               
                 return RedirectToAction("Index", new { OrderID = OrderID });
             }
-            
             OrderDetailsViewModel detail = new OrderDetailsViewModel();
-            ViewBag.ID = OrderID;
-            detail.Products = _mapper.Map<List<ProductViewModel>>(_productRepository.GetProducts().ToList());
+            ViewBag.ID = OrderID; 
+            detail.Products = _mapper.Map<List<ProductViewModel>>(_productRepository.GetProducts().ToList()); 
             return View(detail);
 
         }
@@ -184,7 +184,6 @@ namespace eStore.Controllers
             {
                 _context.OrderDetails.Remove(orderDetail);
             }
-            
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", new { OrderID = id });
             //return RedirectToAction(nameof(Index));

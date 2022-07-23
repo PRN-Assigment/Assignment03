@@ -46,6 +46,7 @@
 
         <form asp-action="Delete">
             <input type="hidden" asp-for="OrderId" />
+            <a href="@Url.Action("Index", "OrderDetails", new {OrderID = ViewBag.ID})" class="btn btn-sm btn-success">Back to List</a>
             <input type="submit" value="Delete" class="btn btn-danger" /> 
         </form>
     </div>

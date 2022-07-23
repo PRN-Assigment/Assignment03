@@ -7,7 +7,7 @@
 
 
 
-
+<h4>@ViewBag.Message</h4>
 <div class="card">
     <div class="card-header">
         <div class="row">
@@ -16,7 +16,6 @@
             </div>
             <div class="cod-md-6 text-end">
                 <a href="@Url.Action("Create", "OrderDetails", new{OrderID = ViewBag.ID})" class="btn btn-sm btn-success">Create new</a>
-                
             </div>   
         </div>
     </div>
@@ -69,7 +68,6 @@
             </tbody>
         </table>
     </div>
-
     <a href="@Url.Action("Index", "Orders")">BackToList</a>
 </div>
 
