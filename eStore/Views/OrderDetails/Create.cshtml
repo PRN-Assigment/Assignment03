@@ -1,5 +1,5 @@
-﻿@model DataLayerDB.DataBaseScaffold.OrderDetail
-
+﻿
+@model OrderDetailsViewModel
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,12 +16,25 @@
             <div class="form-group">
                 <label asp-for="OrderId" class="control-label"></label>
                 <input asp-for="OrderId" class="form-control" />
+                @*                <select asp-for="MemberId" class="form-control">
+                    @foreach (var item in Model.Members)
+                    {
+                        <option value="@item.MemberId">@item.CompanyName</option>
+                    }
+                    ;
+                </select>*@
                 <span asp-validation-for="OrderId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductId" class="control-label"></label>
-                <input asp-for="ProductId" class="form-control" />
-                <span asp-validation-for="ProductId" class="text-danger"></span>
+                <select asp-for="ProductId" >
+                    @foreach (var item in Model.Products)
+                    {
+                        <option value="@item.ProductId">@item.ProductName</option>
+                    }
+                    ;
+                </select>
+
             </div>
             <div class="form-group">
                 <label asp-for="UnitPrice" class="control-label"></label>
