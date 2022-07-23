@@ -40,12 +40,12 @@ namespace eStore.Controllers
 
 
         // GET: OrderDetails
-        public async Task<IActionResult> Index(int? OrderID)
+        public async Task<IActionResult> Index(int OrderID)
         {
 
             var detail = _context.OrderDetails.Where(m=>m.OrderId == OrderID).ToList();
             var listDetail = _orderDetailsRepository.GetOrderDetailsByID(OrderID);
-            if (listDetail.Count != 0)
+            if (listDetail != null)
             {
                 ViewBag.Message = "OrderDetails have been exist! Can't Create";
             }
@@ -97,7 +97,7 @@ namespace eStore.Controllers
         {
 
             var listDetail = _orderDetailsRepository.GetOrderDetailsByID(OrderID);
-            if (listDetail.Count!=0)
+            if (listDetail != null)
             {               
                 return RedirectToAction("Index", new { OrderID = OrderID });
             }
@@ -121,8 +121,7 @@ namespace eStore.Controllers
             {
                 var id = orderDetail.OrderId;
 
-                _context.Add(orderDetail);
-                await _context.SaveChangesAsync();
+                _orderDetailsRepository.AddOrdersDetails(orderDetail);
                 //return RedirectToAction(nameof(Index));
                 return RedirectToAction("Index", new {OrderID = id});
             }

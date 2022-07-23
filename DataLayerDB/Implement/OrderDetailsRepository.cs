@@ -21,6 +21,9 @@ namespace DataLayerDB.Implement
 
         public void AddOrdersDetails(OrderDetail orderDetails)
         {
+            var last = _dbSet.Count();
+            orderDetails.Id = last + 1;
+
             _dbContext.OrderDetails.Add(orderDetails);
             _dbContext.SaveChanges();
         }
@@ -31,9 +34,9 @@ namespace DataLayerDB.Implement
             _dbContext.SaveChanges();
         }
 
-        public List<OrderDetail> GetOrderDetailsByID(int? id)
+        public OrderDetail GetOrderDetailsByID(int id)
         {
-            var orderDT = _dbContext.OrderDetails.Where(o => o.OrderId == id).ToList();
+            var orderDT = _dbContext.OrderDetails.FirstOrDefault(x => x.OrderId == id);
             return orderDT;
         }
 
@@ -47,5 +50,6 @@ namespace DataLayerDB.Implement
             var result = _dbContext.OrderDetails.Where(x => x.OrderId == orderId);
             return result;
         }
+
     }
 }
