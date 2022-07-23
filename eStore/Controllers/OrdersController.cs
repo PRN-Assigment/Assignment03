@@ -10,7 +10,7 @@ using DataLayerDB.DataBaseScaffold;
 using DataLayerDB.Interface;
 using DataLayerDB.Implement;
 using Microsoft.AspNetCore.Http;
-
+using eStore.Models;
 
 namespace eStore.Controllers
 {
@@ -19,19 +19,19 @@ namespace eStore.Controllers
         private readonly eStoreContext _context;
 
         private readonly IOrderRepository _orderRepository;
+        private readonly IOrderDetailsRepository _orderDetailRepository;
 
         public OrdersController(eStoreContext context)
         {
             _context = context;
 
             _orderRepository = new OrderRepository(context);
+            _orderDetailRepository = new OrderDetailsRepository(context);
         }
 
         // GET: Orders
-        public ActionResult Index(IFormCollection form, String startDate, string endDate)
+        public ActionResult Index(String startDate, string endDate)
         {
-            //string startDateParam = form["startDate"];
-            //string endDateParam = form["endDate"];
             IQueryable<Order> result;
             if (startDate != null && endDate != null)
             {
@@ -48,21 +48,26 @@ namespace eStore.Controllers
         }
 
         // GET: Orders/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public ActionResult Details(int? id)
         {
             if (id == null || _context.Orders == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(m => m.OrderId == id);
+            var order = _orderRepository.GetById((int)id);
+            
             if (order == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            var orderDetails = _orderDetailRepository.GetAllOrdersDetailsByOrderId(order.OrderId);
+
+            OrderStatisticViewModel result = new OrderStatisticViewModel();
+            result.Order = order;
+            result.OrderDetails = orderDetails.ToList();
+            return View(result);
         }
 
         // GET: Orders/Create

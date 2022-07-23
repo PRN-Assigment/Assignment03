@@ -71,9 +71,17 @@ namespace DataLayerDB.DataBaseScaffold
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => e.OrderId);
-
+                
                 entity.ToTable("OrderDetail");
+
+                entity.HasKey(e => e.Id)
+                    .HasName("PK_OrderDetail");
+
+                entity.Property(e => e.Id).HasColumnName("Id");
+
+                entity.Property(e => e.Quantity).HasColumnName("Quantity");
+
+                entity.Property(e => e.Discount).HasColumnName("Discount");
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 

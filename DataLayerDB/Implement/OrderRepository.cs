@@ -50,5 +50,10 @@ namespace DataLayerDB.Implement
             IQueryable<Order> result = _dbSet.Where(x => x.OrderDate > startDate && x.OrderDate < endDate);
             return result;
         }
+
+        public Order? GetById(int id)
+        {
+            return _dbSet.FirstOrDefault(x => x.OrderId == id);
+        }
     }
 }
